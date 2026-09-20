@@ -6,6 +6,7 @@
 
 Suivi des dépenses, budgets par catégorie, objectifs d'épargne et détection automatique des factures récurrentes — avec une synchronisation bancaire en temps réel via [Bridge API](https://bridgeapi.io) (agrégation open banking).
 
+[![CI](https://github.com/JulBea/Budgee/actions/workflows/ci.yml/badge.svg)](https://github.com/JulBea/Budgee/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React_19-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
@@ -95,6 +96,7 @@ L'authentification repose sur des sessions serveur (cookies httpOnly) stockées 
 | Base de données | PostgreSQL, Prisma ORM |
 | Auth | bcrypt, express-session, connect-pg-simple, rate limiting, Helmet |
 | Agrégation bancaire | Bridge API (Connect Sessions, webhooks HMAC) |
+| Tests & CI | Vitest, GitHub Actions |
 | Mobile (WIP) | React Native, Expo |
 
 ## Sécurité
@@ -143,6 +145,12 @@ npm run prisma:migrate --workspace=apps/api
 npm run dev:api      # API sur http://localhost:4000
 npm run dev:web      # Web sur http://localhost:5173
 npm run dev:mobile   # Expo (scanner le QR code avec Expo Go)
+```
+
+### Tests
+
+```bash
+npm run test         # tests unitaires de l'API (Vitest)
 ```
 
 ## Structure du projet

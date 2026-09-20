@@ -22,7 +22,7 @@ const PREFIXES_TO_STRIP = [
   "to ",
 ];
 
-function normalizeKey(description: string): string {
+export function normalizeKey(description: string): string {
   let s = description.toLowerCase().trim();
   for (const prefix of PREFIXES_TO_STRIP) {
     if (s.startsWith(prefix)) {
@@ -33,7 +33,7 @@ function normalizeKey(description: string): string {
   return s.replace(/[0-9]/g, "").replace(/\s+/g, " ").trim();
 }
 
-function humanize(description: string): string {
+export function humanize(description: string): string {
   const key = normalizeKey(description);
   return key
     .split(" ")
@@ -49,6 +49,65 @@ function mean(values: number[]): number {
 
 function stddev(values: number[], avg: number): number {
   return Math.sqrt(mean(values.map((v) => (v - avg) ** 2)));
+}
+
+export interface BillOccurrence {
+  description: string;
+  amount: number;
+  date: Date;
+}
+
+export interface BillCandidate {
+  name: string;
+  amount: number;
+  dueDate: Date;
+  status: "PAID" | "PENDING";
+}
+
+/**
+ * Pure decision logic behind recurring-bill detection: given every
+ * occurrence of a normalized merchant key, decide whether it looks like a
+ * recurring bill and if so what to propose. Kept separate from
+ * `detectRecurringBills` (which does the Prisma I/O) so it can be unit
+ * tested without a database.
+ */
+export function findRecurringCandidate(rawOccurrences: BillOccurrence[]): BillCandidate | null {
+  // Un même compte connecté plusieurs fois (ou plusieurs comptes similaires)
+  // peut produire plusieurs transactions identiques le même jour: on les
+  // fusionne en une seule occurrence pour ne pas fausser le calcul d'écart.
+  const byDay = new Map<string, BillOccurrence>();
+  for (const occ of rawOccurrences) {
+    const dayKey = occ.date.toISOString().slice(0, 10);
+    if (!byDay.has(dayKey)) byDay.set(dayKey, occ);
+  }
+  const occurrences = [...byDay.values()].sort((a, b) => a.date.getTime() - b.date.getTime());
+
+  if (occurrences.length < 2) return null;
+
+  const gaps: number[] = [];
+  for (let i = 1; i < occurrences.length; i++) {
+    const days = (occurrences[i].date.getTime() - occurrences[i - 1].date.getTime()) / MS_PER_DAY;
+    gaps.push(days);
+  }
+  const avgGap = mean(gaps);
+  if (avgGap < MIN_GAP_DAYS || avgGap > MAX_GAP_DAYS) return null;
+  if (gaps.length > 1 && stddev(gaps, avgGap) > 6) return null;
+
+  const amounts = occurrences.map((o) => o.amount);
+  const avgAmount = mean(amounts);
+  const variation = avgAmount > 0 ? stddev(amounts, avgAmount) / avgAmount : 1;
+  if (variation > MAX_AMOUNT_VARIATION) return null;
+
+  const name = humanize(occurrences[occurrences.length - 1].description);
+  const lastDate = occurrences[occurrences.length - 1].date;
+  const dueDate = new Date(lastDate.getTime() + avgGap * MS_PER_DAY);
+
+  return {
+    name,
+    amount: Math.round(avgAmount * 100) / 100,
+    dueDate,
+    status: dueDate < new Date() ? "PAID" : "PENDING",
+  };
 }
 
 export async function detectRecurringBills(userId: string): Promise<void> {
@@ -79,47 +138,19 @@ export async function detectRecurringBills(userId: string): Promise<void> {
   const existingNames = new Set(existingBills.map((b) => b.name.toLowerCase()));
 
   for (const [, rawOccurrences] of groups) {
-    // Un même compte connecté plusieurs fois (ou plusieurs comptes similaires)
-    // peut produire plusieurs transactions identiques le même jour: on les
-    // fusionne en une seule occurrence pour ne pas fausser le calcul d'écart.
-    const byDay = new Map<string, { description: string; amount: number; date: Date }>();
-    for (const occ of rawOccurrences) {
-      const dayKey = occ.date.toISOString().slice(0, 10);
-      if (!byDay.has(dayKey)) byDay.set(dayKey, occ);
-    }
-    const occurrences = [...byDay.values()].sort((a, b) => a.date.getTime() - b.date.getTime());
-
-    if (occurrences.length < 2) continue;
-
-    const gaps: number[] = [];
-    for (let i = 1; i < occurrences.length; i++) {
-      const days = (occurrences[i].date.getTime() - occurrences[i - 1].date.getTime()) / MS_PER_DAY;
-      gaps.push(days);
-    }
-    const avgGap = mean(gaps);
-    if (avgGap < MIN_GAP_DAYS || avgGap > MAX_GAP_DAYS) continue;
-    if (gaps.length > 1 && stddev(gaps, avgGap) > 6) continue;
-
-    const amounts = occurrences.map((o) => o.amount);
-    const avgAmount = mean(amounts);
-    const variation = avgAmount > 0 ? stddev(amounts, avgAmount) / avgAmount : 1;
-    if (variation > MAX_AMOUNT_VARIATION) continue;
-
-    const name = humanize(occurrences[occurrences.length - 1].description);
-    if (existingNames.has(name.toLowerCase())) continue;
-
-    const lastDate = occurrences[occurrences.length - 1].date;
-    const nextDueDate = new Date(lastDate.getTime() + avgGap * MS_PER_DAY);
+    const candidate = findRecurringCandidate(rawOccurrences);
+    if (!candidate) continue;
+    if (existingNames.has(candidate.name.toLowerCase())) continue;
 
     await prisma.bill.create({
       data: {
         userId,
-        name,
-        amount: Math.round(avgAmount * 100) / 100,
-        dueDate: nextDueDate,
-        status: nextDueDate < new Date() ? "PAID" : "PENDING",
+        name: candidate.name,
+        amount: candidate.amount,
+        dueDate: candidate.dueDate,
+        status: candidate.status,
       },
     });
-    existingNames.add(name.toLowerCase());
+    existingNames.add(candidate.name.toLowerCase());
   }
 }
