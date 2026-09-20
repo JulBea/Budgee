@@ -32,6 +32,21 @@ Suivi des dépenses, budgets par catégorie, objectifs d'épargne et détection 
 
 ## Aperçu
 
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/login.png" alt="Écran de connexion"></td>
+<td width="50%"><img src="docs/screenshots/dashboard.png" alt="Tableau de bord"></td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/screenshots/transactions.png" alt="Transactions catégorisées automatiquement"></td>
+<td width="50%"><img src="docs/screenshots/goals.png" alt="Objectifs d'épargne liés à un compte"></td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/screenshots/bills.png" alt="Factures détectées automatiquement"></td>
+<td width="50%"><img src="docs/screenshots/dashboard-dark.png" alt="Thème sombre"></td>
+</tr>
+</table>
+
 Budgee est une application full-stack de gestion budgétaire pensée pour un usage personnel et familial. Elle se connecte aux comptes bancaires réels via l'API d'agrégation [Bridge](https://bridgeapi.io) pour récupérer soldes et transactions automatiquement, les catégorise, détecte les prélèvements récurrents et donne une vision claire du budget mensuel et des objectifs d'épargne — sans ressaisie manuelle.
 
 Le projet est organisé en monorepo npm avec une app web (React), une API (Node/Express) et une base mobile (React Native, en pause), autour d'un schéma de données partagé.
