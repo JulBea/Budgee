@@ -1,0 +1,69 @@
+.onboard-page {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: var(--bg);
+}
+
+.onboard-inner {
+  width: 100%;
+  max-width: 460px;
+  text-align: center;
+}
+
+.onboard-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 26px;
+}
+
+.onboard-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 26px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.onboard-text {
+  font-size: 15px;
+  color: var(--ink-55);
+  line-height: 1.6;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.onboard-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 32px 0;
+}
+
+.onboard-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 4px;
+  background: var(--border-strong);
+  transition: width 0.2s;
+}
+
+.onboard-dot.active {
+  width: 20px;
+  background: var(--accent);
+}
+
+.onboard-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}

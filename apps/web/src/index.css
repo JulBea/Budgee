@@ -1,0 +1,123 @@
+:root,
+[data-theme="light"] {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --ink: #1d1b2e;
+  --ink-70: rgba(29, 27, 46, 0.7);
+  --ink-60: rgba(29, 27, 46, 0.6);
+  --ink-55: rgba(29, 27, 46, 0.55);
+  --ink-50: rgba(29, 27, 46, 0.5);
+  --ink-40: rgba(29, 27, 46, 0.4);
+  --border: rgba(29, 27, 46, 0.07);
+  --border-strong: rgba(29, 27, 46, 0.15);
+  --track: rgba(29, 27, 46, 0.07);
+}
+
+[data-theme="dark"] {
+  --bg: #171426;
+  --surface: #211c36;
+  --ink: #f5f3ee;
+  --ink-70: rgba(245, 243, 238, 0.7);
+  --ink-60: rgba(245, 243, 238, 0.6);
+  --ink-55: rgba(245, 243, 238, 0.55);
+  --ink-50: rgba(245, 243, 238, 0.5);
+  --ink-40: rgba(245, 243, 238, 0.4);
+  --border: rgba(245, 243, 238, 0.1);
+  --border-strong: rgba(245, 243, 238, 0.2);
+  --track: rgba(245, 243, 238, 0.12);
+}
+
+:root {
+  --sidebar: #251f3d;
+  --primary: #3a3564;
+  --accent: #f2a93b;
+  --accent-2: #5fa8a0;
+  --danger: #d9534f;
+
+  --cat-transport: #8d8cc4;
+  --cat-subscriptions: #c77b9a;
+  --cat-health: #6fa8dc;
+  --cat-shopping: #d98e5a;
+
+  --font-display: "Sora", sans-serif;
+  --font-body: "Source Sans 3", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+input::placeholder {
+  color: rgba(29, 27, 46, 0.35);
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary) !important;
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.25);
+  border-radius: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apparition douce et décalée pour les listes/grilles de cartes.
+   Utilisation: className="animate-in" + style={{ animationDelay: `${i * 40}ms` }} */
+.animate-in {
+  animation: fade-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in {
+    animation: none;
+  }
+}

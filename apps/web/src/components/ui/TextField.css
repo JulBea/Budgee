@@ -1,0 +1,42 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.field-input {
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+  font-family: var(--font-body);
+  transition: border-color 0.15s;
+  color-scheme: light;
+}
+
+[data-theme="dark"] .field-input {
+  color-scheme: dark;
+}
+
+.field-input:hover {
+  border-color: var(--ink-40);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.field-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+*.log
+.DS_Store
+.expo/
+.claude
+.expo-shared/
+Budgee.txt
+
+# Mobile app scaffold (paused, its own nested git repo)
+apps/mobile/

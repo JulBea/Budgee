@@ -1,0 +1,38 @@
+{
+  "name": "budgee",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Application de gestion de budget personnel et familial avec agrégation bancaire temps réel (Bridge API), catégorisation automatique, détection de factures récurrentes et suivi d'objectifs d'épargne.",
+  "author": "Jules Beauvais",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JulBea/Budgee.git"
+  },
+  "keywords": [
+    "budget",
+    "finance",
+    "react",
+    "typescript",
+    "prisma",
+    "postgresql",
+    "bridge-api",
+    "open-banking"
+  ],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api",
+    "dev:mobile": "npm run start --workspace=apps/mobile"
+  },
+  "allowScripts": {
+    "@prisma/client@5.22.0": true,
+    "@prisma/engines@5.22.0": true,
+    "esbuild@0.28.1": true,
+    "prisma@5.22.0": true,
+    "bcrypt@6.0.0": true
+  }
+}

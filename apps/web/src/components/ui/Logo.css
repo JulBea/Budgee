@@ -1,0 +1,28 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.logo-mark-inner {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--sidebar);
+}
+
+.logo-word {
+  font-family: var(--font-display);
+  font-weight: 700;
+}

@@ -1,0 +1,12 @@
+.sync-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(95, 168, 160, 0.14);
+  color: #3f8a81;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
